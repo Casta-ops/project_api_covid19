@@ -11,7 +11,7 @@ def get_data(limite, departamento_nom):
         results = client.get("gt2j-8ykr", where=query, limit=limite) # Limitar los resultados
     except requests.exceptions.RequestException as e: # Capturar errores de conexión
         print(f"Error al conectar con la API: {e}") # Imprimir el error
-        return pd.DataFrame()  # Retornar un DataFrame vacío en caso de error
+        return pd.DataFrame()  # Retornar un DataFrame vacío en caso de error (retornar un DataFrame vacío en lugar de None)
 
     # Convertir los resultados a un DataFrame
     df = pd.DataFrame.from_records(results)
@@ -34,16 +34,15 @@ def get_data(limite, departamento_nom):
         "Ciudad de ubicación", "Departamento", "Edad", 
         "Tipo", "Estado", "País de procedencia"
     ]
-
     return df
 
 def get_departamentos():
     client = Socrata("www.datos.gov.co", None)
 
     try:
-        results = client.get("gt2j-8ykr", select="distinct departamento_nom")
-    except requests.exceptions.RequestException as e:
-        print(f"Error al conectar con la API: {e}")
+        results = client.get("gt2j-8ykr", select="distinct departamento_nom") # distinct para obtener valores únicos
+    except requests.exceptions.RequestException as e: # Capturar errores de conexión
+        print(f"Error al conectar con la API: {e}") 
         return pd.DataFrame()  # Retornar un DataFrame vacío en caso de error
 
     return pd.DataFrame.from_records(results)
